@@ -1,0 +1,220 @@
+
+<div class="row">
+    <div class="col-md-12">
+        
+        <div class=" app-header">
+            <h4>Calculate your healthcare expenses*</h4>
+            <p class="text-muted">This app uses only statistics available in the public to calculate what you would pay if you didn't get insurance
+                from your employer and what kind of help you might get under the new American Healthcare Act.</p>
+                <!--<ul class="list-unstyled">
+                    <li><a href="https://app.box.com/embed/preview/s9ibvog5ugrxy10qqd9e9sv46q0l1hws?direction=ASC&theme=dark">American Health Care Act bill</a></li>
+                 </ul>   -->
+
+            <h4>Note</h4>
+            <ul>
+                <li>
+                    If you get your healthcare plan from your employer and they deduct money from your paycheck, then you don't really need this website.
+                    <ul>
+                        <li>
+                            Furthermore, your employer is likely paying more of the <i>actual</i> premium than you are and you should ask them what it is.
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    This app does not consider deductibles or other considerations that you may have to go through based upon your current health and status. This app is
+                    merely to compare if you were to purchase healthcare under the ACA vs the American Health Care Act (if it is passed).
+                </li>
+                <li>
+                    This site and its owner have no political affiliation
+                </li>
+            </ul>
+
+            <p class="">
+                 I'm just a regular dude who knows how to write some programs. Take it or leave it, I don't really care. I simply want to share information and make it easier to understand legislation.
+                <br />
+                <br />
+                If you need to throw some shade, tweet me: &#64;iamlmt
+        </p>        
+
+            
+        </div>
+    </div>
+</div>
+<div class="app-main">
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Current Healthcare Premium Averages</h3>
+            <p class="text-muted">Source:
+            <a href="http://files.kff.org/attachment/Report-Employer-Health-Benefits-2016-Annual-Survey">
+                http://files.kff.org/attachment/Report-Employer-Health-Benefits-2016-Annual-Survey
+
+            </a>
+            </p>
+            <h4>Individual</h4>
+            <p>Individual Annually: ${{data.healthcarePremiums.averageAnnualIndividual | number:'2.2-2'}}</p>
+            <p>Individual Monthly: ${{data.healthcarePremiums.averageAnnualIndividual / 12 | number:'2.2-2'}}</p>
+            <h4>Family</h4>
+            <p>Family Annually: ${{data.healthcarePremiums.averageAnnualFamily | number:'2.2-2'}}</p>
+            <p>Family Monthly: ${{data.healthcarePremiums.averageAnnualFamily / 12 | number:'2.2-2'}}</p>
+
+            
+        </div>
+        <div class="col-md-6">
+            <h3>Federal Poverty Line</h3>
+            <p class="text-muted">
+                    Source: <a href="https://aspe.hhs.gov/prior-hhs-poverty-guidelines-and-federal-register-references">
+                        https://aspe.hhs.gov/prior-hhs-poverty-guidelines-and-federal-register-references
+                    </a>
+                </p>
+            <p>The Affordable Care Act provides subsidies based upon the percentage of AGI above the Federal Poverty Line (FPL)
+                that you recieve.</p>
+            <p>FPL First Person: ${{data.fplConstants.firstPerson | number:'2.2-2'}}</p>
+            <p>FPL Additional: ${{data.fplConstants.additionalPerson | number: '2.2-2'}} per person</p>
+        </div>
+    </div>
+    <div class="row default-top-margin">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="agi">Adjusted Gross Income</label>
+                <input type="text" class="form-control" [(ngModel)]="userInputs.agiFormatted" name="agi" id="agi" (ngModelChange)="checkNumber($event)" placeholder="Adjusted gross income is income after deductions (e.g. after your mortgage interest deduction)"  />
+            </div>
+           
+           <label>Tax Filing Status</label>
+            <div class="radio">
+                <label>
+                <input type="radio" name="individual" [value]="true" [(ngModel)]="userInputs.individual" [checked]="userInputs.individual == true" /><span>Individual</span>
+                
+            </label>
+
+            </div>
+            <div class="radio">
+                <label>
+                <input type="radio" name="individual" [value]="false" [(ngModel)]="userInputs.individual" [checked]="userInputs.individual == false" /><span>Family/Joint</span>
+            </label>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+
+                        <label>Adults</label>
+                        <select [(ngModel)]="userInputs.adults" class="form-control" (ngModelChange)="updateAdults($event)">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                    </div>
+                    <div *ngIf="userInputs.adults > 0">
+                        <ul class="list-unstyled">
+                            <li *ngFor="let item of userInputs.adultAges; let i = index">
+                                <label>Adult {{i + 1}} Age</label>
+                                <input type="text" class="form-control" [(ngModel)]="item.age" />
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group" *ngIf="!userInputs.individual">
+                        <label>Children</label>
+                        <select [(ngModel)]="userInputs.children" class="form-control" (ngModelChange)="updateChildren($event)">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                    </div>
+                    <div *ngIf="userInputs.children > 0">
+                        <ul class="list-unstyled">
+                            <li *ngFor="let item of userInputs.childrenAges; let i = index">
+                                <label>Child {{i + 1}} Age</label>
+                                <input type="text" class="form-control" [(ngModel)]="item.age" />
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+            
+        </div>
+    </div>
+    
+    <div class="row default-top-margin" *ngIf="calcResults.isCalculated">
+        <div class="col-md-12">
+            <h3>Monthly Payment</h3>
+            <div class="row default-top-border ">
+                <div class="col-md-6">
+                
+                    <div class="result-container default-top-margin" [ngClass]="{'less': calcResults.acaMonthly < calcResults.ahcaMonthlyPremium}">
+                        <h4>Under ACA you would pay: ${{calcResults.acaMonthly | number: '2.2-2'}} each month</h4>
+                        <p class="text-muted">The ACA premium is calculated based upon your income, this is the max you would pay for a silver plan.</p>
+                    </div>
+                    <div class="result-container default-top-margin" [ngClass]="{'less': calcResults.acaMonthly > calcResults.ahcaMonthlyPremium && calcResults.isAhcaQualified}">
+                        <h4>Under AHCA you would pay: ${{calcResults.ahcaMonthlyPremium | number: '2.2-2'}} each month</h4>
+                        <p class="text-muted">The American Health Care Act (AHCA) uses a tax credit system based upon your age and the number of family members up to 5 total. The credit of ${{calcResults.ahcaMonthlyCredit | number:'2.2-2'}} is being used to subtract from the average rates from above.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="bg-info default-padding default-top-margin default-border-radius">
+                <h4>You can enter your actual monthly premium here</h4>
+                <p class="text-muted">This will override the averages from above to show the difference in what you currently pay vs the plans.</p>
+                <input type="text" class="form-control" [(ngModel)]="userInputs.actualMonthlyPremiumFormatted" placeholder="Monthly Premium (optional)" (ngModelChange)="checkActualMonthly($event)" />
+                    </div>
+                    <div *ngIf="userInputs.actualMonthlyPremium > 0" class="result-container default-top-margin" [ngClass]="{'less': (userInputs.actualMonthlyPremium < calcResults.ahcaMonthlyPremium) || (userInputs.actualMonthlyPremium < calcResults.acaMonthly)}">
+                    <h4>Your current monthly is: {{abs(calcResults.acaDifference) | currency: 'USD': true }} 
+                        <span *ngIf="calcResults.acaDifference < 0">less</span>
+                        <span *ngIf="calcResults.acaDifference > 0">more</span> than the ACA.
+                    </h4>
+                    <h4>Your current monthly is: {{abs(calcResults.ahcaDifference) | currency: 'USD': true }} 
+                        <span *ngIf="calcResults.ahcaDifference < 0">less</span>
+                        <span *ngIf="calcResults.ahcaDifference > 0">more</span> than the AHCA.
+                    </h4>
+                </div>
+                </div>
+
+            </div>
+            
+           
+            
+        </div>
+    </div>
+    <div class="row default-top-margin">
+        <div class="col-md-6">
+        <button class="btn btn-primary" (click)="calc()" [ngClass]="{disabled : !userInputs.valid}">Calculate</button>    
+        </div>
+    </div>
+    <div class="row default-top-margin" *ngIf="calcResults.isCalculated">
+        <div class="col-md-6">
+            <h3>ACA Cap</h3>
+            <p>The Affordable Care Act (Obamacare) uses a cap mechanism where the maximum premium you would pay is displayed
+                below.</p>
+            <h4>Annualy: ${{calcResults.acaAnnually | number:'2.2-2'}}</h4>
+            <h4>Monthly: ${{calcResults.acaMonthly | number:'2.2-2'}}</h4>
+        </div>
+        <div class="col-md-6">
+            <h3>AHCA Credit</h3>
+            <p>The American Healthcare Act is based upon age of the participants and a maximum amount of credits per year (up to $14,000 per year). </p>
+            <div *ngIf="calcResults.isAhcaCapped == true">
+                <p>You will get the maximum credits for the year and it is capped at $14,000 per year.</p>
+            </div>
+            <div *ngIf="calcResults.isAhcaQualified == false">
+                <p>Because your adjusted gross income is greater than $75,000 (individuals) or $150,000 (jointly/married) you
+                    do not qualify for a credit.</p>
+            </div>
+            <div *ngIf="calcResults.isAhcaQualified == true">
+                <h4>${{calcResults.ahcaAnnualCredit | number:'2.2-2'}}</h4>
+                <h4>${{calcResults.ahcaMonthlyCredit | number:'2.2-2'}}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row default-top-margin" *ngIf="calcResults.isCalculated">
+        <div class="col-md-12">
+            <h3>How you compare to FPL</h3>
+            <p>You are at {{calcResults.fplPct * 100 | number }}% of the Federal Poverty Line.</p>
+            <p>Based upon your inputs your FPL is: ${{calcResults.fplVal | number: '2.2-2'}}</p>
+
+        </div>
+    </div>
+    
+</div>

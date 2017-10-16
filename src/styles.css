@@ -1,0 +1,52 @@
+#main {
+  margin-bottom:60px;
+}
+
+h1 {
+  color: #369;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 250%;
+}
+
+.default-top-margin {
+  margin-top: 10px;
+}
+
+.default-top-border {
+  border-top:1px solid #d7d7d7;
+}
+
+.default-padding {
+  padding:10px;
+}
+
+.default-border-radius {
+  border-radius: 5px;
+}
+
+.app-container {
+  position:relative;
+  padding:10px;
+  border:solid 1px #d7d7d7;
+  border-radius: 5px;
+}
+
+.app-header {
+  background-color:#f9f9f9;
+  position:relative;
+  padding:10px;
+  border-radius: 5px 5px 0 0;
+  border-bottom:solid 1px #d3d3d3;
+}
+
+.app-main {
+  padding:10px;
+}
+
+.result-container {
+  padding:10px;
+}
+
+.less {
+  background-color:#d5ffbf;
+}
